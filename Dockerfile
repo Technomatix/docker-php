@@ -14,6 +14,16 @@ RUN set -xe && \
     
     # Install php extensions
 
+    ## GD http://php.net/manual/en/book.image.php
+    apt-get -qq install -y \
+            libfreetype6-dev \
+            libjpeg62-turbo-dev \
+            libpng12-dev && \
+    docker-php-ext-configure gd \
+                             --with-freetype-dir=/usr/include/ \
+                             --with-jpeg-dir=/usr/include/ && \
+    docker-php-ext-install -j$(nproc) gd && \
+
     ## MySQL Functions http://php.net/manual/en/ref.pdo-mysql.php
     docker-php-ext-install -j$(nproc) pdo_mysql && \
 
