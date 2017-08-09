@@ -12,15 +12,39 @@ RUN apt-get update && \
     ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime && echo ${TZ} > /etc/timezone && \
     
     # Install php extensions
-    docker-php-ext-install pdo_mysql && \
-    docker-php-ext-install bcmath && \
-    docker-php-ext-install mbstring && \
-    apt-get install -y zlib1g-dev && docker-php-ext-install zip && \
-    apt-get install -y libxml2-dev && docker-php-ext-install xmlrpc && \
-    apt-get install -y libcurl4-openssl-dev && docker-php-ext-install curl  && \
-    apt-get install -y libxslt-dev && docker-php-ext-install xsl && \
-    apt-get install -y libicu-dev && docker-php-ext-install intl && \
-    apt-get install -y libmcrypt-dev && docker-php-ext-install mcrypt && \
+
+    ## MySQL Functions http://php.net/manual/en/ref.pdo-mysql.php
+    docker-php-ext-install -j$(nproc) pdo_mysql && \
+
+    ## BCMath Arbitrary Precision Mathematics http://php.net/manual/en/book.bc.php
+    docker-php-ext-install -j$(nproc) bcmath && \
+
+    ## Multibyte String http://php.net/manual/en/book.mbstring.php
+    docker-php-ext-install -j$(nproc) mbstring && \
+
+    ## Zip http://php.net/manual/en/book.zip.php
+    apt-get install -y zlib1g-dev && \
+    docker-php-ext-install -j$(nproc) zip && \
+
+    ## XML-RPC http://php.net/manual/en/book.xmlrpc.php
+    apt-get install -y libxml2-dev && \
+    docker-php-ext-install -j$(nproc) xmlrpc && \
+
+    ## cURL http://php.net/manual/en/book.curl.php
+    apt-get install -y libcurl4-openssl-dev && \ 
+    docker-php-ext-install -j$(nproc) curl && \
+
+    ## XSL http://php.net/manual/en/book.xsl.php
+    apt-get install -y libxslt-dev && \
+    docker-php-ext-install -j$(nproc) xsl && \
+
+    ## Intl http://php.net/manual/en/book.intl.php
+    apt-get install -y libicu-dev && \
+    docker-php-ext-install -j$(nproc) intl && \
+
+    ## Mcrypt http://php.net/manual/en/book.mcrypt.php
+    apt-get install -y libmcrypt-dev && \
+    docker-php-ext-install -j$(nproc) mcrypt && \
 
     # Install xDebug
     pecl install xdebug && \
