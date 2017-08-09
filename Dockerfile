@@ -6,7 +6,8 @@ ENV TZ=UTC
 ENV COMPOSER_HOME=/home/composer/.composer
 ENV COMPOSER_ALLOW_SUPERUSER=1
    
-RUN apt-get update && \
+RUN set -xe && \
+    apt-get -qq update && \
     
     # Configure timezone
     ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime && echo ${TZ} > /etc/timezone && \
@@ -23,27 +24,27 @@ RUN apt-get update && \
     docker-php-ext-install -j$(nproc) mbstring && \
 
     ## Zip http://php.net/manual/en/book.zip.php
-    apt-get install -y zlib1g-dev && \
+    apt-get -qq install -y zlib1g-dev && \
     docker-php-ext-install -j$(nproc) zip && \
 
     ## XML-RPC http://php.net/manual/en/book.xmlrpc.php
-    apt-get install -y libxml2-dev && \
+    apt-get -qq install -y libxml2-dev && \
     docker-php-ext-install -j$(nproc) xmlrpc && \
 
     ## cURL http://php.net/manual/en/book.curl.php
-    apt-get install -y libcurl4-openssl-dev && \ 
+    apt-get -qq install -y libcurl4-openssl-dev && \ 
     docker-php-ext-install -j$(nproc) curl && \
 
     ## XSL http://php.net/manual/en/book.xsl.php
-    apt-get install -y libxslt-dev && \
+    apt-get -qq install -y libxslt-dev && \
     docker-php-ext-install -j$(nproc) xsl && \
 
     ## Intl http://php.net/manual/en/book.intl.php
-    apt-get install -y libicu-dev && \
+    apt-get -qq install -y libicu-dev && \
     docker-php-ext-install -j$(nproc) intl && \
 
     ## Mcrypt http://php.net/manual/en/book.mcrypt.php
-    apt-get install -y libmcrypt-dev && \
+    apt-get -qq install -y libmcrypt-dev && \
     docker-php-ext-install -j$(nproc) mcrypt && \
 
     # Install xDebug
@@ -57,8 +58,8 @@ RUN apt-get update && \
     echo "date.timezone = "${TZ} >> /usr/local/etc/php/php.ini && \
     
     # Tools
-    apt-get install -y git && \
-    apt-get install -y mysql-client && \
+    apt-get -qq install -y git && \
+    apt-get -qq install -y mysql-client && \
         
     # Install Composer
     curl -sS https://getcomposer.org/installer | php -- \
