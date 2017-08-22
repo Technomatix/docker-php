@@ -28,9 +28,6 @@ RUN set -xe && \
     ## BCMath Arbitrary Precision Mathematics http://php.net/manual/en/book.bc.php
     docker-php-ext-install -j$(nproc) bcmath && \
 
-    ## Multibyte String http://php.net/manual/en/book.mbstring.php
-    docker-php-ext-install -j$(nproc) mbstring && \
-
     ## Zip http://php.net/manual/en/book.zip.php
     apt-get -qq install -y zlib1g-dev && \
     docker-php-ext-install -j$(nproc) zip && \
@@ -38,10 +35,6 @@ RUN set -xe && \
     ## XML-RPC http://php.net/manual/en/book.xmlrpc.php
     apt-get -qq install -y libxml2-dev && \
     docker-php-ext-install -j$(nproc) xmlrpc && \
-
-    ## cURL http://php.net/manual/en/book.curl.php
-    apt-get -qq install -y libcurl4-openssl-dev && \ 
-    docker-php-ext-install -j$(nproc) curl && \
 
     ## XSL http://php.net/manual/en/book.xsl.php
     apt-get -qq install -y libxslt-dev && \
