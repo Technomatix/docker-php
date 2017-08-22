@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+TAG=$(echo "${IMAGE_NAME}" | cut -d':' -f 2)
+
+echo "------ HOOK START - POST PUSH -------"
+
+ALIAS="NULL"
+
+case "${TAG}" in
+     "5.6-cli-jessie")      
+          ALIAS=latest
+          ;;
+     "dev-5.6-cli-jessie")      
+          ALIAS=dev
+          ;;
+esac
+
+if [ "${ALIAS}" != "NULL" ]; then
+  docker tag "${IMAGE_NAME}" "${DOCKER_REPO}:${ALIAS}"
+  docker push "${DOCKER_REPO}:${ALIAS}"
+fi
+
+echo "------ HOOK END - POST PUSH -------"
