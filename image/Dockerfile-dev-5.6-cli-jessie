@@ -1,0 +1,32 @@
+FROM technomatix/php:5.6-cli-jessie
+  
+RUN set -xe && \
+    apt-get -qq update && \
+
+    # Install ShellCheck
+    apt-get -qq install --assume-yes shellcheck && \
+
+    # Install xDebug
+    pecl install xdebug && \
+    docker-php-ext-enable xdebug && \
+    echo "xdebug.remote_enable=on" | tee -a /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && \
+    echo "xdebug.remote_autostart=on" | tee -a /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && \
+
+    # Install Bats
+    git clone --depth 1 https://github.com/sstephenson/bats.git /tmp/bats && \
+    cd /tmp/bats && \
+    ./install.sh /usr/local && \
+
+    # Install Codeception
+    composer global require --optimize-autoloader codeception/codeception && \
+
+    # Clean
+    composer clearcache && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+ARG BUILD_DATE
+ARG VCS_REF
+
+LABEL org.label-schema.build-date=$BUILD_DATE \
+      org.label-schema.vcs-ref=$VCS_REF
