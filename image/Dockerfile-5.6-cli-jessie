@@ -63,6 +63,9 @@ RUN set -xe && \
          --filename=composer \
          --install-dir=/usr/local/bin && \
 
+    # Install PHing
+    composer global require --optimize-autoloader phing/phing && \
+    
     # Clean
     composer clearcache && \
     apt-get clean && \
