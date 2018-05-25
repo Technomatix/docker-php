@@ -3,6 +3,9 @@ FROM technomatix/php:5.6-cli-jessie
 RUN set -xe && \
     apt-get -qq update && \
 
+    # Install Tools
+    apt-get -qq install --assume-yes jq unzip && \
+
     # Install ShellCheck
     apt-get -qq install --assume-yes shellcheck && \
 

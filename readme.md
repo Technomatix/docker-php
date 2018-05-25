@@ -7,7 +7,7 @@ docker pull technomatix/php
 ## Run codecept
 
 ```bash
-docker run -it --rm technomatix/php codecept
+docker run -it --rm technomatix/php:dev codecept
 ```
 
 ## Run any php-script
