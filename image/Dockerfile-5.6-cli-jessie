@@ -48,6 +48,9 @@ RUN set -xe && \
     apt-get -qq install -y libmcrypt-dev && \
     docker-php-ext-install -j$(nproc) mcrypt && \
 
+    ## MySQL Improved Extension http://php.net/manual/en/book.mysqli.php
+    docker-php-ext-install -j$(nproc) mysqli && \
+
     # Configure PHP
     echo "date.timezone = "${TZ} >> /usr/local/etc/php/php.ini && \
     
