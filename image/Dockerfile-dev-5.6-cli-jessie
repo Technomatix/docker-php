@@ -1,5 +1,5 @@
 FROM technomatix/php:5.6-cli-jessie
-  
+
 RUN set -xe && \
     apt-get -qq update && \
 
@@ -7,7 +7,10 @@ RUN set -xe && \
     apt-get -qq install --assume-yes jq unzip && \
 
     # Install ShellCheck
-    apt-get -qq install --assume-yes shellcheck && \
+    curl --insecure -OL https://storage.googleapis.com/shellcheck/shellcheck-stable.linux.x86_64.tar.xz && \
+    tar -xvf shellcheck-stable.linux.x86_64.tar.xz && \
+    mv shellcheck-stable/shellcheck /usr/local/bin/shellcheck && \
+    rm -fr shellcheck-stable shellcheck-stable.linux.x86_64.tar.xz && \
 
     # Install xDebug
     pecl install xdebug-2.5.5 && \
