@@ -1,0 +1,15 @@
+sudo: required
+dist: trusty
+
+notifications:
+  email: false
+
+before_install:
+  - sudo curl --fail --location https://github.com/mvdan/sh/releases/download/v2.6.3/shfmt_v2.6.3_linux_amd64 > /usr/local/bin/shfmt
+  - sudo chmod +x /usr/local/bin/shfmt
+  - curl --insecure -OL https://storage.googleapis.com/shellcheck/shellcheck-stable.linux.x86_64.tar.xz
+  - tar -xvf shellcheck-stable.linux.x86_64.tar.xz
+  - sudo mv shellcheck-stable/shellcheck /usr/local/bin/shellcheck
+
+script:
+  - make test

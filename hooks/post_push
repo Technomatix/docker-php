@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Exit script if you try to use an uninitialized variable.
+set -o nounset
+
 TAG=$(echo "${IMAGE_NAME}" | cut -d':' -f 2)
 
 echo "------ HOOK START - POST PUSH -------"
