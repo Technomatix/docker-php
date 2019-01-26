@@ -23,6 +23,10 @@ RUN set -xe && \
     cd /tmp/bats && \
     ./install.sh /usr/local && \
 
+    # Install shfmt
+    curl --fail --location https://github.com/mvdan/sh/releases/download/v2.6.3/shfmt_v2.6.3_linux_amd64 > /usr/local/bin/shfmt && \
+    chmod +x /usr/local/bin/shfmt && \
+
     # Install Codeception
     composer global require --optimize-autoloader codeception/codeception && \
 
