@@ -1,0 +1,175 @@
+user:
+  www-data:
+    exists: true
+    gid: 33
+
+group:
+  www-data:
+    exists: true
+    gid: 33
+
+command:
+
+  composer --version | cut -d ' ' -f 3:
+    exit-status: 0
+    stdout: 
+      - /1\.5\.(.*)/ # >= 1.5
+
+  mysql --version | cut -d ' ' -f 4:
+    exit-status: 0
+    stdout: 
+      - /14\.1(.*)/ # >= 14.1
+  
+  git --version | cut -d ' ' -f 3:
+    exit-status: 0
+    stdout: 
+      - /2\.1(.*)/ # >= 2.1
+
+  # Only confirm that these commands exit cleanly, with no error output.
+  # Version constraints have been pushed down to the variant-level test, since they are different
+  php -v | grep cli | cut -d ' ' -f 2 | cut -d '+' -f 1:
+    exit-status: 0
+    stdout:
+      - /5\.6(.*)/ # >= 5.6
+
+  phing -version | cut -d ' ' -f 2:
+    exit-status: 0
+    stdout:
+      - /2\.16(.*)/ # >= 2.16
+    
+  # Test the standard extensions are enabled
+  # TODO php -m | grep -i apcu:
+    # exit-status: 0
+    # TODO check version
+
+  # TODO php -m | grep -i calendar:
+    # exit-status: 0
+    # TODO check version
+
+  # TODO  php -m | grep -i bz2:
+    # exit-status: 0
+    # TODO check version
+
+  # TODO php -m | grep -i ctype:
+    # exit-status: 0
+    # TODO check version
+  php --ri curl | grep -i Information | cut -d ' ' -f 4:
+    exit-status: 0
+    stdout:
+      - /7\.38(.*)/ # >= 7.38
+
+  php -m | grep -i date:
+    exit-status: 0
+
+  php -m | grep -i dom:
+    exit-status: 0
+
+  # TODO install php -m | grep -i exif:
+    # exit-status: 0
+    # TODO check version
+
+  # NOTE: extensions only activates running through FPM mode
+
+  php -m | grep -i gd:
+    exit-status: 0
+    # TODO check version
+  
+  php -m | grep -i iconv:
+    exit-status: 0
+    # TODO check version
+
+  php -m | grep -i intl:
+    exit-status: 0
+    # TODO check version
+
+  php -m | grep -i json:
+    exit-status: 0
+    # TODO check version
+
+  php -m | grep -i mbstring:
+    exit-status: 0
+    # TODO check version
+
+  php -m | grep -i mcrypt:
+    exit-status: 0
+    # TODO check version
+
+  # TODO install php -m | grep -i mysqli:
+    # exit-status: 0
+    # TODO check version
+
+  # TODO install php -m | grep -i opcache:
+    # exit-status: 0
+    # TODO check version
+
+  php -m | grep -i openssl:
+    exit-status: 0
+    # TODO check version
+
+  # TODO install php -m | grep -i pcntl:
+    # exit-status: 0
+    # TODO check version
+
+  php -m | grep -i pdo:
+    exit-status: 0
+    # TODO check version
+
+  php -m | grep -i pdo_mysql:
+    exit-status: 0
+    # TODO check version
+
+  php -m | grep -i phar:
+    exit-status: 0
+    # TODO check version
+
+  php -m | grep -i posix:
+    exit-status: 0
+    # TODO check version
+
+  # TODO install php -m | grep -i shmop:
+    # exit-status: 0
+    # TODO check version
+
+  php -m | grep -i simplexml:
+    exit-status: 0
+    # TODO check version
+
+  # TODO install php -m | grep -i sockets:
+    # exit-status: 0
+    # TODO check version
+
+  # TODO install php -m | grep -i sysvmsg:
+    # exit-status: 0
+    # TODO check version
+
+  # TODO install php -m | grep -i sysvsem:
+    # exit-status: 0
+    # TODO check version
+
+  # TODO install php -m | grep -i sysvshm:
+    # exit-status: 0
+    # TODO check version
+
+  php -m | grep -i tokenizer:
+    exit-status: 0
+    # TODO check version
+
+  php -m | grep -i xml:
+    exit-status: 0
+    # TODO check version
+
+  php -m | grep -i xmlreader:
+    exit-status: 0
+    # TODO check version
+
+  php -m | grep -i xmlwriter:
+    exit-status: 0
+    # TODO check version
+
+  php -m | grep -i zip:
+    exit-status: 0
+    # TODO check version
+
+  php -m | grep -i zlib:
+    exit-status: 0
+    # TODO check version
