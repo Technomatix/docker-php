@@ -7,20 +7,20 @@ TAG=$(echo "${IMAGE_NAME}" | cut -d':' -f 2)
 
 echo "------ HOOK START - POST PUSH -------"
 
-ALIAS="NULL"
+alias="NULL"
 
 case "${TAG}" in
 "5.6-cli-jessie")
-	ALIAS=latest
+	alias="latest"
 	;;
 "dev-5.6-cli-jessie")
-	ALIAS=dev
+	alias="dev"
 	;;
 esac
 
-if "${ALIAS}" != "NULL"; then
-	docker tag "${IMAGE_NAME}" "${DOCKER_REPO}:${ALIAS}"
-	docker push "${DOCKER_REPO}:${ALIAS}"
+if "${alias}" != "NULL"; then
+	docker tag "$IMAGE_NAME" "$DOCKER_REPO:$alias"
+	docker push "$DOCKER_REPO:$alias"
 fi
 
 echo "------ HOOK END - POST PUSH -------"
