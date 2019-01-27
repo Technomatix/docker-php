@@ -31,10 +31,11 @@ RUN set -xe && \
     composer global require --optimize-autoloader codeception/codeception && \
 
     # Install Sonar Scanner
-    curl --insecure -OL https://sonarsource.bintray.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.1.0.1141-linux.zip && \
-    unzip sonar-scanner-cli-3.1.0.1141-linux.zip  && \
-    rm sonar-scanner-cli-3.1.0.1141-linux.zip  && \
-    mv sonar-scanner-3.1.0.1141-linux /opt/sonar-scanner  && \
+    sonarScannerVersion=$(curl --fail --silent --location https://api.github.com/repos/SonarSource/sonar-scanner-cli/tags | jq '.[0].name')  && \
+    curl --insecure -OL "https://sonarsource.bintray.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${sonarScannerVersion}-linux.zip" && \
+    unzip "sonar-scanner-cli-${sonarScannerVersion}-linux.zip" && \
+    rm "sonar-scanner-cli-${sonarScannerVersion}-linux.zip" && \
+    mv "sonar-scanner-${sonarScannerVersion}-linux" /opt/sonar-scanner  && \
 
     # Clean
     composer clearcache && \
