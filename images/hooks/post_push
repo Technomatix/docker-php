@@ -3,24 +3,21 @@
 # Exit script if you try to use an uninitialized variable.
 set -o nounset
 
-TAG=$(echo "${IMAGE_NAME}" | cut -d':' -f 2)
-
 echo "------ HOOK START - POST PUSH -------"
 
-alias="NULL"
-
-case "${TAG}" in
+case "${DOCKER_TAG}" in
 "5.6-cli-jessie")
-	alias="latest"
+	ALIAS="latest"
 	;;
 "dev-5.6-cli-jessie")
-	alias="dev"
+	ALIAS="dev"
+	;;
+*)
+	exec 0
 	;;
 esac
 
-if "${alias}" != "NULL"; then
-	docker tag "$IMAGE_NAME" "$DOCKER_REPO:$alias"
-	docker push "$DOCKER_REPO:$alias"
-fi
+docker tag "$IMAGE_NAME" "$DOCKER_REPO:$ALIAS"
+docker push "$DOCKER_REPO:$ALIAS"
 
 echo "------ HOOK END - POST PUSH -------"

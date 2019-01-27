@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+# Exit script if you try to use an uninitialized variable.
+set -o nounset
+
+echo "------ HOOK START - BUILD -------"
+
+DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+
+dockerFile="Dockerfile-$DOCKER_TAG"
+
+echo "------ BUILD - $DOCKER_TAG -------"
+docker build \
+	--build-arg BUILD_DATE="${DATE}" \
+	--build-arg VCS_REF="${GIT_SHA1}" \
+	--tag "$IMAGE_NAME" \
+	--file "$dockerFile" .
+
+echo "------ HOOK END - BUILD -------"
