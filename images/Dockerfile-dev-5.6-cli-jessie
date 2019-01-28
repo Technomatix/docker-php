@@ -1,10 +1,14 @@
 FROM technomatix/php:5.6-cli-jessie
 
+ENV \
+    SONARCLI_VERSION=3.3.0.1492 \
+    SONAR_GPG="CFCA4A29D26468DE" \
+
 RUN set -xe && \
     apt-get -qq update && \
 
     # Install Tools
-    apt-get -qq install --assume-yes jq unzip && \
+    apt-get -qq install --assume-yes jq unzip gpg && \
 
     # Install ShellCheck
     curl --insecure -OL https://storage.googleapis.com/shellcheck/shellcheck-stable.linux.x86_64.tar.xz && \
@@ -31,16 +35,16 @@ RUN set -xe && \
     composer global require --optimize-autoloader codeception/codeception && \
 
     # Install Sonar Scanner
-    sonarScannerVersion=$(curl --fail --silent --location https://api.github.com/repos/SonarSource/sonar-scanner-cli/tags | jq '.[0].name')  && \
-    curl --insecure -OL "https://sonarsource.bintray.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${sonarScannerVersion}-linux.zip" && \
-    unzip "sonar-scanner-cli-${sonarScannerVersion}-linux.zip" && \
-    rm "sonar-scanner-cli-${sonarScannerVersion}-linux.zip" && \
-    mv "sonar-scanner-${sonarScannerVersion}-linux" /opt/sonar-scanner  && \
+    curl --output sonar-scanner-cli.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SONARCLI_VERSION}-linux.zip && \
+    curl --output sonar-scanner-cli.zip.asc https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SONARCLI_VERSION}-linux.zip.asc && \
+    gpg --status-fd 1 --verify sonar-scanner-cli.zip.asc sonar-scanner-cli.zip | grep ${SONAR_GPG} && \
+    unzip sonar-scanner-cli.zip && \
+    mv sonar-scanner-${SONARCLI_VERSION}-linux /opt/sonar-scanner && \
 
     # Clean
     composer clearcache && \
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /root/.gnupg
 
 ENV PATH="/opt/sonar-scanner/bin:${PATH}"
 
