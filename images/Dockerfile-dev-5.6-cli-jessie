@@ -2,7 +2,7 @@ FROM technomatix/php:5.6-cli-jessie
 
 ENV \
     SONARCLI_VERSION=3.3.0.1492 \
-    SONAR_GPG="CFCA4A29D26468DE" \
+    SONAR_GPG="CFCA4A29D26468DE"
 
 RUN set -xe && \
     apt-get -qq update && \
