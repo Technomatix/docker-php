@@ -66,7 +66,10 @@ RUN set -xe && \
     # Tools
     apt-get -qq install -y git && \
     apt-get -qq install -y mysql-client && \
-        
+    # Git LFS https://github.com/git-lfs/git-lfs/wiki/Installation#debian
+    curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash  && \
+    apt-get install git-lfs && \
+
     # Install Composer
     curl -sS https://getcomposer.org/installer | php -- \
          --filename=composer \
