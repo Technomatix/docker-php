@@ -1,0 +1,107 @@
+#https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#from
+FROM php:7.2-fpm
+
+ENV TZ=UTC
+#https://stackoverflow.com/questions/30664220/where-to-find-composers-global-packages
+ENV PATH="/home/composer/.composer/vendor/bin:${PATH}"
+ENV COMPOSER_HOME=/home/composer/.composer
+ENV COMPOSER_ALLOW_SUPERUSER=1
+
+RUN set -ex \
+    && apt-get -qq update \
+    && echo "Configure timezone" \
+    && ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime && echo ${TZ} > /etc/timezone \
+    && echo "GD http://php.net/manual/en/book.image.php" \
+    && apt-get -qq install -y --no-install-recommends \
+        libfreetype6-dev \
+        libjpeg62-turbo-dev \
+        libpng-dev \
+    && docker-php-ext-configure gd \
+        --with-gd \
+        --with-freetype-dir=/usr/include/ \
+        --with-jpeg-dir=/usr/include/ \
+        --with-png-dir=/usr/include/ \
+    && docker-php-ext-install -j$(nproc) gd \
+    && apt-get -qq remove -y \
+        libfreetype6-dev \
+        libjpeg62-turbo-dev \
+        libpng-dev \
+    && echo "MySQL PDO http://php.net/manual/en/ref.pdo-mysql.php" \
+    && docker-php-ext-install -j$(nproc) pdo_mysql \
+    && echo "MySQL Improved Extension http://php.net/manual/en/book.mysqli.php" \
+    && docker-php-ext-install -j$(nproc) mysqli \
+    && echo "MySQL client" \
+    && apt-get -qq  install -y --no-install-recommends default-mysql-client \
+    && echo "BCMath http://php.net/manual/en/book.bc.php" \
+    && docker-php-ext-install -j$(nproc) bcmath \
+    && echo "Zip http://php.net/manual/en/book.zip.php" \
+    && apt-get -qq  install -y --no-install-recommends zip \
+    && docker-php-ext-install -j$(nproc) zip \
+    && echo "XML-RPC http://php.net/manual/en/book.xmlrpc.php" \
+    && apt-get -qq  install -y --no-install-recommends libxml2-dev \
+    && docker-php-ext-install -j$(nproc) xmlrpc \
+    && apt-get -qq remove -y libxml2-dev \
+    && echo "XSL http://php.net/manual/en/book.xsl.php" \
+    && apt-get -qq  install -y --no-install-recommends libxslt-dev \
+    && docker-php-ext-install -j$(nproc) xsl \
+    && apt-get -qq remove -y libxslt-dev \
+    && echo "Intl http://php.net/manual/en/book.intl.php" \
+    && apt-get -qq  install -y --no-install-recommends libicu-dev \
+    && docker-php-ext-install -j$(nproc) intl \
+    && apt-get -qq remove -y libicu-dev \
+    && echo "Mcrypt http://php.net/manual/en/book.mcrypt.php" \
+    && apt-get -qq  install -y --no-install-recommends libmcrypt-dev \
+    && pecl install mcrypt-1.0.2 \
+    && docker-php-ext-enable mcrypt \
+    && apt-get -qq remove -y libmcrypt-dev \
+    && echo "Configure PHP" \
+    && echo "date.timezone = "${TZ} >> /usr/local/etc/php/php.ini \
+    && echo "xDebug" \
+    && pecl install xdebug-3.0.2 \
+    && docker-php-ext-enable xdebug \
+    && echo "GIT" \
+    && apt-get -qq install -y git \
+    && git config --global user.name "MocoMoodle Container" \
+    && git config --global user.email mmc@example.com \
+    && echo "curl" \
+    && apt-get -qq install -y curl \
+    && echo "Composer" \
+    && curl -sS https://getcomposer.org/installer -o composer-setup.php \
+    && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
+    && echo "mc" \
+    && apt-get -qq install -y mc \
+    && echo "Clean" \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# Add user for application
+RUN groupadd -g 1000 www
+RUN useradd -u 1000 -ms /bin/bash -g www www
+
+# Copy application directory content
+# https://docs.docker.com/engine/reference/builder/#copy
+#COPY ./build /var/www
+
+# Copy existing application directory permissions
+#COPY --chown=www:www . /var/www
+
+# Change current user to www
+USER www
+
+# See nginx/moco.conf
+EXPOSE 9000
+
+# Set working directory
+WORKDIR /project
+
+ARG BUILD_DATE
+ARG VCS_REF
+
+LABEL org.label-schema.build-date=$BUILD_DATE \
+      org.label-schema.vcs-url="https://github.com/Technomatix/docker-php.git" \
+      org.label-schema.vcs-ref=$VCS_REF \
+      org.label-schema.schema-version="1.0" \
+      org.label-schema.vendor="Technomatix team <team@tmx-learning.com>" \
+      org.label-schema.name="docker-php" \
+      org.label-schema.description="PHP stack for development and work" \
+      org.label-schema.url="https://github.com/Technomatix/docker-php"
