@@ -73,6 +73,8 @@ RUN set -ex \
     && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
     && echo "mc" \
     && apt-get -qq install -y mc \
+    && echo "rsync" \
+    && apt-get -qq install -y rsync \
     && echo "Clean" \
     && pecl clear-cache \
     && apt-get clean \
